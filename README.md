@@ -4,69 +4,73 @@ A mobile-first Progressive Web App (PWA) for completing Bangladesh Civil Service
 
 ## Live app
 
-GitHub Pages URL:
-
 `https://cseteesta-bit.github.io/AMR/`
 
-## What is included
+## Current release
 
 - 100-day study plan covering foundation, revision, mock-test and final-review phases
 - Official 200-mark, 10-subject structure for the 50th BCS preliminary syllabus
-- 120 original starter MCQs with answers and explanations
-- Timed subject-wise and mixed quizzes
+- **210 total MCQs**
+- **90 selected, source-tagged past BCS questions spanning 2005–2025**
+- Past-question filters by subject, question type and examination
+- Timed quizzes with working Next, Previous, Skip and Finish controls
+- Answer preservation when moving backward or forward
+- Browser-history navigation and an in-app Back button
 - Study completion, quiz history, accuracy and weak-subject analytics
 - Current-affairs notes with date, source and analysis fields
-- Official and primary learning-resource links
-- Dark/light modes, local offline storage and installable PWA support
-- Responsive mobile interface with no external runtime dependency
+- Dark/light modes, offline cache and installable PWA support
+
+The past-question collection is a curated educational selection from the 27th, 29th, 35th, 37th, 40th, 44th, 45th, 46th and 47th BCS preliminary examinations. Some wording and explanations have been normalized for mobile practice. It is not represented as a complete official archive. See `PAST_QUESTION_SOURCES.md`.
 
 ## One-time GitHub Pages activation
 
-This is a static app, so GitHub Pages should serve the default branch directly.
-
-1. Open **Settings → Pages** in this repository.
-2. Under **Build and deployment**, select **Deploy from a branch**.
+1. Open **Settings → Pages**.
+2. Under **Build and deployment**, choose **Deploy from a branch**.
 3. Select branch **main**.
 4. Select folder **/ (root)**.
 5. Click **Save**.
 
-Do not select **GitHub Actions** as the Pages source. The workflow in `.github/workflows/pages.yml` validates the application; GitHub Pages publishes the static files directly from `main`.
+Do not select GitHub Actions as the Pages source. The workflow validates the app; GitHub Pages serves the static files directly from `main`.
 
-After activation, normal commits pushed to `main` automatically refresh the Pages site. GitHub may take several minutes to publish a new or updated site.
+## Run and test locally
 
-## Automated validation
+```bash
+npm start
+```
 
-Every push and pull request to `main` checks that:
+Open `http://localhost:4173`.
 
-- all required app and PWA files exist;
-- every JavaScript file passes a syntax check;
-- the bank contains exactly 120 unique questions;
-- the 10 syllabus subjects total exactly 200 marks.
+Run automated data and quiz-state tests:
 
-## Run locally
+```bash
+npm test
+```
 
-1. Install Node.js.
-2. Open the project folder in a terminal.
-3. Run `npm start`.
-4. Open `http://localhost:4173`.
+The tests verify:
 
-A static web server may also be used. Service workers do not run through the `file://` protocol.
+- exactly 210 unique questions;
+- exactly 90 past-exam questions;
+- nine source-tagged BCS examinations;
+- a 200-mark syllabus;
+- Next and Previous quiz movement;
+- preservation of an answer after moving to another question and back;
+- question-type and exam filtering.
 
 ## Install on a phone
 
-Open the HTTPS GitHub Pages URL in Chrome, Edge, or Safari and choose **Install app** or **Add to Home Screen**.
+Open the HTTPS Pages URL in Chrome, Edge or Safari and choose **Install app** or **Add to Home Screen**.
 
 ## Data and privacy
 
-Study progress, quiz history and personal notes are stored only in the browser through local storage. Clearing browser site data or uninstalling the PWA may remove that information. The current release does not provide account login or cloud synchronization.
+Study progress, quiz history and personal notes are stored in the browser. Clearing site data or uninstalling the PWA may remove them. This version has no account or cloud sync.
 
 ## Content notes
 
-- The syllabus structure is based on the official 50th BCS preliminary syllabus published by the Bangladesh Public Service Commission on 9 December 2025.
-- Included MCQs are original practice questions; they are not presented as official past questions.
-- Current affairs change continuously. Verify dates, figures and policy changes through official or highly reliable sources before memorising them.
+- The syllabus structure follows the official 50th BCS preliminary syllabus published by BPSC on 9 December 2025.
+- Past questions are selected from public educational archives and tagged with exam, year and source URL.
+- Verify time-sensitive facts and current affairs through official or highly reliable sources.
 - This independent project is not affiliated with BPSC.
 
 ## License
 
-App source: MIT. Educational content should be reviewed before public commercial distribution.
+App source: MIT. Educational content should be reviewed before commercial distribution.

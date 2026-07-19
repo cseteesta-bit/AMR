@@ -8,31 +8,33 @@ GitHub Pages URL:
 
 `https://cseteesta-bit.github.io/AMR/`
 
-The repository automatically validates the static files and mirrors every `main` branch update to the `gh-pages` branch.
+The repository validates every release and mirrors each `main` branch update to the `gh-pages` branch.
 
 ## What is included
 
 - 100-day study plan covering foundation, revision, mock-test and final-review phases
-- 50th BCS preliminary subject structure and mark distribution
-- 10-subject syllabus tracker with topic-level guidance
-- Original starter MCQ bank with answers and explanations
+- Official 200-mark, 10-subject structure for the 50th BCS preliminary syllabus
+- 120 original starter MCQs with answers and explanations
 - Timed subject-wise and mixed quizzes
 - Study completion, quiz history, accuracy and weak-subject analytics
 - Current-affairs notes with date, source and analysis fields
 - Official and primary learning-resource links
-- Dark/light modes, local offline storage and PWA support
+- Dark/light modes, local offline storage and installable PWA support
 - Responsive mobile interface with no external runtime dependency
 
-## Deploy with GitHub Pages
+## One-time GitHub Pages activation
 
-The deployment branch is `gh-pages`.
+The deployment branch is `gh-pages`, and it is already maintained automatically.
 
 1. Open **Settings → Pages** in this repository.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select branch **gh-pages** and folder **/ (root)**.
-4. Click **Save**.
+2. Under **Build and deployment**, select **Deploy from a branch**.
+3. Select branch **gh-pages**.
+4. Select folder **/ (root)**.
+5. Click **Save**.
 
-After that one-time repository setting, every push to `main` automatically updates `gh-pages` through `.github/workflows/pages.yml`.
+Do not select **GitHub Actions** as the Pages source for this repository. The workflow already publishes the validated static app to `gh-pages`; GitHub Pages only needs to serve that branch.
+
+After the one-time activation, every push to `main` runs `.github/workflows/pages.yml`, validates all JavaScript, confirms exactly 120 unique questions and 200 total syllabus marks, and refreshes `gh-pages`.
 
 ## Run locally
 
@@ -54,7 +56,7 @@ Study progress, quiz history and personal notes are stored only in the browser t
 ## Content notes
 
 - The syllabus structure is based on the official 50th BCS preliminary syllabus published by the Bangladesh Public Service Commission on 9 December 2025.
-- Included MCQs are original starter questions created for practice; they are not presented as official past questions.
+- Included MCQs are original practice questions; they are not presented as official past questions.
 - Current affairs change continuously. Verify dates, figures and policy changes through official or highly reliable sources before memorising them.
 - This independent project is not affiliated with BPSC.
 

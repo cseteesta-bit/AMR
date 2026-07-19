@@ -30,7 +30,9 @@ jobs:
             manifest.json
             sw.js
             .nojekyll
+            package.json
             css/styles.css
+            css/enhancements.css
             assets/icon.svg
             assets/icon-192.svg
             assets/icon-512.svg
@@ -43,21 +45,20 @@ jobs:
             js/questions-extra-5.js
             js/questions-extra-6.js
             js/questions-extra-7.js
-            js/app.js
+            js/past-1.js
+            js/past-2.js
+            js/past-3.js
+            js/past-4.js
+            js/past-5.js
+            js/quiz-core.js
+            js/app-base.js
+            js/app-views.js
+            js/app-quiz.js
+            js/app-init.js
+            tests/smoke.test.js
           )
           for file in "${required[@]}"; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
-          for file in js/*.js sw.js; do node --check "$file"; done
-          node <<'NODE'
-          global.window={};
-          require('./js/data.js');
-          require('./js/syllabus-update.js');
-          for(let i=1;i<=7;i++)require(`./js/questions-extra-${i}.js`);
-          const data=window.BCS_DATA;
-          const marks=data.subjects.reduce((sum,subject)=>sum+subject.marks,0);
-          if(data.questions.length!==120)throw new Error(`Expected 120 questions, found ${data.questions.length}`);
-          if(marks!==200)throw new Error(`Expected 200 syllabus marks, found ${marks}`);
-          if(new Set(data.questions.map(q=>q.id)).size!==data.questions.length)throw new Error('Duplicate question IDs detected');
-          console.log(`Validated ${data.questions.length} questions across ${data.subjects.length} subjects and ${marks} marks.`);
-          NODE
+          for file in js/*.js tests/*.js sw.js server.js; do node --check "$file"; done
+          npm test

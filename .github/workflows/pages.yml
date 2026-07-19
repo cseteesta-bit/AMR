@@ -32,6 +32,8 @@ jobs:
             .nojekyll
             css/styles.css
             assets/icon.svg
+            assets/icon-192.svg
+            assets/icon-512.svg
             js/data.js
             js/syllabus-update.js
             js/questions-extra-1.js

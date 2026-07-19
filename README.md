@@ -8,8 +8,6 @@ GitHub Pages URL:
 
 `https://cseteesta-bit.github.io/AMR/`
 
-The repository validates every release and mirrors each `main` branch update to the `gh-pages` branch.
-
 ## What is included
 
 - 100-day study plan covering foundation, revision, mock-test and final-review phases
@@ -24,17 +22,26 @@ The repository validates every release and mirrors each `main` branch update to 
 
 ## One-time GitHub Pages activation
 
-The deployment branch is `gh-pages`, and it is already maintained automatically.
+This is a static app, so GitHub Pages should serve the default branch directly.
 
 1. Open **Settings → Pages** in this repository.
 2. Under **Build and deployment**, select **Deploy from a branch**.
-3. Select branch **gh-pages**.
+3. Select branch **main**.
 4. Select folder **/ (root)**.
 5. Click **Save**.
 
-Do not select **GitHub Actions** as the Pages source for this repository. The workflow already publishes the validated static app to `gh-pages`; GitHub Pages only needs to serve that branch.
+Do not select **GitHub Actions** as the Pages source. The workflow in `.github/workflows/pages.yml` validates the application; GitHub Pages publishes the static files directly from `main`.
 
-After the one-time activation, every push to `main` runs `.github/workflows/pages.yml`, validates all JavaScript, confirms exactly 120 unique questions and 200 total syllabus marks, and refreshes `gh-pages`.
+After activation, normal commits pushed to `main` automatically refresh the Pages site. GitHub may take several minutes to publish a new or updated site.
+
+## Automated validation
+
+Every push and pull request to `main` checks that:
+
+- all required app and PWA files exist;
+- every JavaScript file passes a syntax check;
+- the bank contains exactly 120 unique questions;
+- the 10 syllabus subjects total exactly 200 marks.
 
 ## Run locally
 

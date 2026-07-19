@@ -1,4 +1,4 @@
-name: Deploy BCS 100 Pro to GitHub Pages
+name: Publish BCS 100 Pro
 
 on:
   push:
@@ -6,32 +6,43 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: publish-gh-pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  validate-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v6
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          fetch-depth: 0
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Validate static application
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            index.html
+            manifest.json
+            sw.js
+            .nojekyll
+            css/styles.css
+            js/data.js
+            js/app.js
+            assets/icon.svg
+          )
+          for file in "${required[@]}"; do
+            test -f "$file" || { echo "Missing required file: $file"; exit 1; }
+          done
+          node --check js/data.js
+          node --check js/app.js
+
+      - name: Publish main to gh-pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          git push --force origin HEAD:gh-pages

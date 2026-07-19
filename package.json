@@ -1,9 +1,12 @@
 {
   "name": "bcs100-pro",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Installable 100-day BCS preparation PWA",
-  "scripts": {"start": "node server.js"},
-  "keywords": ["BCS", "Bangladesh", "exam", "PWA", "quiz"],
+  "description": "Installable 100-day BCS preparation PWA with past-question bank",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/smoke.test.js"
+  },
+  "keywords": ["BCS", "Bangladesh", "exam", "PWA", "quiz", "past questions"],
   "license": "MIT"
 }

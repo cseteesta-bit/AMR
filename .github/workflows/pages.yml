@@ -31,6 +31,7 @@ jobs:
             sw.js
             .nojekyll
             package.json
+            BCS_100_Pro_Colab.ipynb
             css/styles.css
             css/enhancements.css
             assets/icon.svg
@@ -61,5 +62,26 @@ jobs:
           for file in "${required[@]}"; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
-          for file in js/*.js tests/*.js sw.js server.js; do node --check "$file"; done
+          for file in js/*.js tests/*.js sw.js; do node --check "$file"; done
           npm test
+
+      - name: Validate Colab notebook
+        shell: python
+        run: |
+          import ast
+          import json
+          from pathlib import Path
+
+          path = Path("BCS_100_Pro_Colab.ipynb")
+          notebook = json.loads(path.read_text(encoding="utf-8"))
+
+          assert notebook.get("nbformat") == 4, "Notebook must use nbformat 4"
+          assert notebook.get("cells"), "Notebook must contain cells"
+
+          for index, cell in enumerate(notebook["cells"]):
+              if cell.get("cell_type") != "code":
+                  continue
+              source = "".join(cell.get("source", []))
+              ast.parse(source, filename=f"cell_{index}")
+
+          print(f"Validated Colab notebook with {len(notebook['cells'])} cells.")

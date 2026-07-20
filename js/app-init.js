@@ -32,7 +32,7 @@
   });
   document.addEventListener('click',event=>{
     const routeButton=event.target.closest('[data-route]');
-    if(routeButton){A.navigate(routeButton.dataset.route);return;}
+    if(routeButton){A.clearQuizAutoAdvance?.();A.navigate(routeButton.dataset.route);return;}
     const actionButton=event.target.closest('[data-action]');
     if(actionButton)A.actions[actionButton.dataset.action]?.(actionButton,event);
   });
@@ -43,11 +43,12 @@
     A.themeBtn.textContent=A.state.theme==='light'?'☀':'☾';A.save();
   });
   A.backBtn.addEventListener('click',()=>{
+    A.clearQuizAutoAdvance?.();
     if(A.modalRoot.firstElementChild)return A.closeModal();
     if(A.currentRoute==='quiz/play'||A.currentRoute==='quiz/result')return A.navigate('quiz',{replace:true});
     if(Number(history.state?.bcsIndex||0)>0)history.back();else A.navigate('home',{replace:true});
   });
-  addEventListener('popstate',()=>A.render(A.routeFromLocation()));
+  addEventListener('popstate',()=>{A.clearQuizAutoAdvance?.();A.render(A.routeFromLocation());});
 
   document.body.classList.toggle('light',A.state.theme==='light');
   A.themeBtn.textContent=A.state.theme==='light'?'☀':'☾';
@@ -55,5 +56,15 @@
   history.replaceState({bcsApp:true,bcsIndex:0,route:initial},'',`#${initial}`);
   A.render(initial);
 
-  if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.warn));
+  if('serviceWorker'in navigator){
+    addEventListener('load',()=>{
+      let refreshing=false;
+      navigator.serviceWorker.addEventListener('controllerchange',()=>{
+        if(refreshing)return;
+        refreshing=true;
+        location.reload();
+      });
+      navigator.serviceWorker.register('./sw.js').then(registration=>registration.update()).catch(console.warn);
+    });
+  }
 })();

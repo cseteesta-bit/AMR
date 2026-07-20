@@ -1,4 +1,4 @@
-const CACHE='bcs100-pro-v2.0.0';
+const CACHE='bcs100-pro-v2.1.0';
 const ASSETS=[
   './','./index.html','./manifest.json','./css/styles.css','./css/enhancements.css',
   './assets/icon.svg','./assets/icon-192.svg','./assets/icon-512.svg',
@@ -25,16 +25,13 @@ self.addEventListener('fetch',event=>{
   const url=new URL(request.url);
   if(url.origin!==self.location.origin)return;
 
-  if(request.mode==='navigate'){
-    event.respondWith(fetch(request).catch(()=>caches.match('./index.html')));
-    return;
-  }
-
-  event.respondWith(caches.match(request).then(cached=>cached||fetch(request).then(response=>{
-    if(response.ok){
-      const copy=response.clone();
-      caches.open(CACHE).then(cache=>cache.put(request,copy));
-    }
-    return response;
-  })));
+  event.respondWith(
+    fetch(request).then(response=>{
+      if(response.ok){
+        const copy=response.clone();
+        caches.open(CACHE).then(cache=>cache.put(request,copy));
+      }
+      return response;
+    }).catch(()=>caches.match(request).then(cached=>cached||caches.match('./index.html')))
+  );
 });

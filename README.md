@@ -6,6 +6,21 @@ A mobile-first Progressive Web App (PWA) for completing Bangladesh Civil Service
 
 `https://cseteesta-bit.github.io/AMR/`
 
+## Google Colab version
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cseteesta-bit/AMR/blob/main/BCS_100_Pro_Colab.ipynb)
+
+The Colab notebook:
+
+- clones or updates this repository;
+- checks the required application files;
+- runs `npm test` when Node.js is available;
+- starts the app with Python's built-in static web server;
+- opens the application through Colab's secure proxy;
+- includes cells for refreshing the latest GitHub version and stopping the server.
+
+A Colab runtime is temporary. Keep the notebook running while using the proxied application. GitHub Pages remains the permanent deployment option.
+
 ## Current release
 
 - 100-day study plan covering foundation, revision, mock-test and final-review phases
@@ -14,6 +29,7 @@ A mobile-first Progressive Web App (PWA) for completing Bangladesh Civil Service
 - **90 selected, source-tagged past BCS questions spanning 2005–2025**
 - Past-question filters by subject, question type and examination
 - Timed quizzes with working Next, Previous, Skip and Finish controls
+- Automatic movement to the next question after showing the answer explanation
 - Answer preservation when moving backward or forward
 - Browser-history navigation and an in-app Back button
 - Study completion, quiz history, accuracy and weak-subject analytics
@@ -53,6 +69,7 @@ The tests verify:
 - nine source-tagged BCS examinations;
 - a 200-mark syllabus;
 - Next and Previous quiz movement;
+- automatic movement from question one to question two after answering;
 - preservation of an answer after moving to another question and back;
 - question-type and exam filtering.
 

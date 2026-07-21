@@ -57,6 +57,7 @@ jobs:
             js/study-bundle-3.js
             js/study-bundle-4.js
             js/study-bundle-5.js
+            js/study-sources.js
             js/quiz-core.js
             js/app-base.js
             js/app-views.js

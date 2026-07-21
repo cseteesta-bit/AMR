@@ -13,26 +13,38 @@
   function exams(){
     return [...new Map(D.questions.filter(q=>q.past&&q.exam).map(q=>[q.exam,{exam:q.exam,year:q.year||0}])).values()].sort((a,b)=>b.year-a.year);
   }
+  function studyModules(subjectId){
+    const study=window.BCS_STUDY?.subjects||{};
+    if(subjectId!=='all')return study[subjectId]?.modules||[];
+    return [];
+  }
   function available(){return Q.filterQuestions(D.questions,A.preferences).length;}
 
   A.registerView('quiz',()=>{
     clearAutoAdvance();
+    A.preferences.topic=A.preferences.topic||'all';
     const count=available();
-    A.view.innerHTML=`<article class="card quiz-setup"><h2>Smart Practice Quiz</h2><p>বিষয়, প্রশ্নের ধরন ও নির্দিষ্ট BCS পরীক্ষা নির্বাচন করুন। উত্তর দেওয়ার পর সঠিক উত্তর ও ব্যাখ্যা দেখিয়ে অ্যাপ স্বয়ংক্রিয়ভাবে পরের প্রশ্নে যাবে।</p><div class="quiz-bank-summary"><div><strong>${A.bn(D.questions.length)}</strong><span>মোট প্রশ্ন</span></div><div><strong>${A.bn(D.questions.filter(q=>q.past).length)}</strong><span>বিগত BCS</span></div><div><strong>${A.bn(count)}</strong><span>এই ফিল্টারে</span></div></div><div class="form-grid"><label>প্রশ্নের ধরন<select id="quizMode" class="select"><option value="all">সব প্রশ্ন</option><option value="past">বিগত BCS প্রশ্ন</option><option value="practice">প্র্যাকটিস প্রশ্ন</option></select></label><label>বিষয়<select id="quizSubject" class="select"><option value="all">সব বিষয়</option>${D.subjects.map(s=>`<option value="${s.id}">${A.esc(s.bn)}</option>`).join('')}</select></label><label>নির্দিষ্ট পরীক্ষা<select id="quizExam" class="select"><option value="all">সব পরীক্ষা</option>${exams().map(x=>`<option value="${A.esc(x.exam)}">${A.esc(x.exam)} (${A.bn(x.year)})</option>`).join('')}</select></label><label>প্রশ্ন সংখ্যা<select id="quizCount" class="select"><option>5</option><option>10</option><option>20</option><option>50</option><option>100</option></select></label><button class="btn" data-action="startQuiz" ${count?'':'disabled'}>কুইজ শুরু করুন</button></div></article><div class="section-head"><div><h3>বিগত প্রশ্নের উৎস</h3><p>২০০৫–২০২৫</p></div></div><div class="resource-list">${(D.pastQuestionSources||[]).sort((a,b)=>b.year-a.year).map(x=>`<a class="card resource" target="_blank" rel="noopener noreferrer" href="${A.esc(x.url)}"><div><b>${A.esc(x.exam)}</b><small>${A.bn(x.year)} • Source archive</small></div><span>↗</span></a>`).join('')}</div>`;
-    document.querySelector('#quizMode').value=A.preferences.mode;
-    document.querySelector('#quizSubject').value=A.preferences.subject;
-    document.querySelector('#quizExam').value=A.preferences.exam;
-    document.querySelector('#quizCount').value=String(A.preferences.count);
+    const modules=studyModules(A.preferences.subject);
+    const studyCount=D.questions.filter(q=>q.study).length;
+    A.view.innerHTML=`<article class="card quiz-setup"><h2>Smart Practice Quiz</h2><p>বিগত প্রশ্ন, মৌলিক প্র্যাকটিস অথবা নতুন অধ্যায়ভিত্তিক study test নির্বাচন করুন। উত্তর দেখিয়ে অ্যাপ স্বয়ংক্রিয়ভাবে পরের প্রশ্নে যাবে।</p><div class="quiz-bank-summary"><div><strong>${A.bn(D.questions.length)}</strong><span>মোট প্রশ্ন</span></div><div><strong>${A.bn(D.questions.filter(q=>q.past).length)}</strong><span>বিগত BCS</span></div><div><strong>${A.bn(studyCount)}</strong><span>Study test</span></div></div><div class="form-grid"><label>প্রশ্নের ধরন<select id="quizMode" class="select"><option value="all">সব প্রশ্ন</option><option value="past">বিগত BCS প্রশ্ন</option><option value="study">Study materials test</option><option value="practice">সাধারণ প্র্যাকটিস</option></select></label><label>বিষয়<select id="quizSubject" class="select"><option value="all">সব বিষয়</option>${D.subjects.map(s=>`<option value="${s.id}">${A.esc(s.bn)}</option>`).join('')}</select></label><label>অধ্যায়<select id="quizTopic" class="select" ${A.preferences.mode==='study'&&A.preferences.subject!=='all'?'':'disabled'}><option value="all">সব অধ্যায়</option>${modules.map(module=>`<option value="${module.id}">${A.esc(module.title)}</option>`).join('')}</select></label><label>নির্দিষ্ট পরীক্ষা<select id="quizExam" class="select" ${A.preferences.mode==='study'?'disabled':''}><option value="all">সব পরীক্ষা</option>${exams().map(x=>`<option value="${A.esc(x.exam)}">${A.esc(x.exam)} (${A.bn(x.year)})</option>`).join('')}</select></label><label>প্রশ্ন সংখ্যা<select id="quizCount" class="select"><option>5</option><option>10</option><option>20</option><option>50</option><option>100</option></select></label><button class="btn" data-action="startQuiz" ${count?'':'disabled'}>কুইজ শুরু করুন</button></div>${A.preferences.mode==='study'&&A.preferences.topic!=='all'?`<div class="alert"><b>নির্বাচিত অধ্যায়:</b> ${A.esc(A.studyTopicTitle?.(A.preferences.topic)||A.preferences.topic)}</div>`:''}</article><div class="section-head"><div><h3>বিগত প্রশ্নের উৎস</h3><p>২০০৫–২০২৫</p></div></div><div class="resource-list">${(D.pastQuestionSources||[]).sort((a,b)=>b.year-a.year).map(x=>`<a class="card resource" target="_blank" rel="noopener noreferrer" href="${A.esc(x.url)}"><div><b>${A.esc(x.exam)}</b><small>${A.bn(x.year)} • Source archive</small></div><span>↗</span></a>`).join('')}</div>`;
+    document.querySelector('#quizMode').value=A.preferences.mode||'all';
+    document.querySelector('#quizSubject').value=A.preferences.subject||'all';
+    document.querySelector('#quizExam').value=A.preferences.exam||'all';
+    document.querySelector('#quizCount').value=String(A.preferences.count||10);
+    const topicSelect=document.querySelector('#quizTopic');
+    if(topicSelect&&[...topicSelect.options].some(option=>option.value===A.preferences.topic))topicSelect.value=A.preferences.topic;
   });
 
   A.syncPreferences=()=>{
-    A.preferences={
-      mode:document.querySelector('#quizMode')?.value||'all',
-      subject:document.querySelector('#quizSubject')?.value||'all',
-      exam:document.querySelector('#quizExam')?.value||'all',
-      count:Number(document.querySelector('#quizCount')?.value||10)
-    };
-    if(A.preferences.exam!=='all')A.preferences.mode='past';
+    const mode=document.querySelector('#quizMode')?.value||'all';
+    const subject=document.querySelector('#quizSubject')?.value||'all';
+    let exam=document.querySelector('#quizExam')?.value||'all';
+    let topic=document.querySelector('#quizTopic')?.value||'all';
+    let finalMode=mode;
+    if(exam!=='all'){finalMode='past';topic='all';}
+    if(finalMode==='study'){exam='all';}
+    else topic='all';
+    A.preferences={mode:finalMode,subject,exam,topic,count:Number(document.querySelector('#quizCount')?.value||10)};
   };
   A.stopTimer=()=>{
     if(A.timerId)clearInterval(A.timerId);
@@ -58,6 +70,10 @@
     A.startTimer();A.navigate('quiz/play');
   }
   function source(question,answered){
+    if(question.study){
+      const title=A.studyTopicTitle?.(question.topicId)||'Study material';
+      return `<span class="meta-chip topic-badge">${A.esc(title)}</span>${answered&&question.sourceUrl?`<a class="meta-chip source-link" href="${A.esc(question.sourceUrl)}" target="_blank" rel="noopener noreferrer">ভিত্তি উৎস ↗</a>`:''}`;
+    }
     if(!question.past)return '<span class="meta-chip">Practice question</span>';
     return `<span class="meta-chip past-badge">${A.esc(question.exam||'Past BCS')}</span>${question.year?`<span class="meta-chip">${A.bn(question.year)}</span>`:''}${answered&&question.sourceUrl?`<a class="meta-chip source-link" href="${A.esc(question.sourceUrl)}" target="_blank" rel="noopener noreferrer">Source ↗</a>`:''}`;
   }
@@ -77,7 +93,7 @@
     A.timerId=null;
     if(!s.recorded){
       const result=Q.score(s);
-      A.state.history.unshift({score:result.correct,total:result.total,unanswered:result.unanswered,date:new Date().toISOString(),subject:s.filters.subject,mode:s.filters.mode,exam:s.filters.exam,bySubject:Q.subjectBreakdown(s)});
+      A.state.history.unshift({score:result.correct,total:result.total,unanswered:result.unanswered,date:new Date().toISOString(),subject:s.filters.subject,mode:s.filters.mode,exam:s.filters.exam,topic:s.filters.topic,bySubject:Q.subjectBreakdown(s)});
       A.state.history=A.state.history.slice(0,300);s.recorded=true;A.save();
     }
     A.navigate('quiz/result',{replace:true});
@@ -120,6 +136,6 @@
   });
   A.registerAction('finishQuiz',finish);
   A.registerAction('restartQuiz',()=>{clearAutoAdvance();A.navigate('quiz',{replace:true});setTimeout(start,0);});
-  A.registerAction('subjectQuiz',button=>{clearAutoAdvance();A.preferences={...A.preferences,subject:button.dataset.subject,exam:'all'};A.closeModal();A.navigate('quiz');});
-  A.registerAction('pastQuiz',()=>{clearAutoAdvance();A.preferences={...A.preferences,mode:'past',exam:'all'};A.navigate('quiz');});
+  A.registerAction('subjectQuiz',button=>{clearAutoAdvance();A.preferences={...A.preferences,subject:button.dataset.subject,exam:'all',topic:'all'};A.closeModal();A.navigate('quiz');});
+  A.registerAction('pastQuiz',()=>{clearAutoAdvance();A.preferences={...A.preferences,mode:'past',exam:'all',topic:'all'};A.navigate('quiz');});
 })();

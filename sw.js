@@ -1,12 +1,13 @@
-const CACHE='bcs100-pro-v2.1.0';
+const CACHE='bcs100-pro-v3.0.0';
 const ASSETS=[
-  './','./index.html','./manifest.json','./css/styles.css','./css/enhancements.css',
+  './','./index.html','./manifest.json','./css/styles.css','./css/enhancements.css','./css/study.css',
   './assets/icon.svg','./assets/icon-192.svg','./assets/icon-512.svg',
   './js/data.js','./js/syllabus-update.js',
   './js/questions-extra-1.js','./js/questions-extra-2.js','./js/questions-extra-3.js',
   './js/questions-extra-4.js','./js/questions-extra-5.js','./js/questions-extra-6.js','./js/questions-extra-7.js',
   './js/past-1.js','./js/past-2.js','./js/past-3.js','./js/past-4.js','./js/past-5.js',
-  './js/quiz-core.js','./js/app-base.js','./js/app-views.js','./js/app-quiz.js','./js/app-init.js'
+  './js/study-bundle-1.js','./js/study-bundle-2.js','./js/study-bundle-3.js','./js/study-bundle-4.js','./js/study-bundle-5.js',
+  './js/quiz-core.js','./js/app-base.js','./js/app-views.js','./js/app-quiz.js','./js/app-study.js','./js/app-init.js'
 ];
 
 self.addEventListener('install',event=>{

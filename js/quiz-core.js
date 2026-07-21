@@ -18,12 +18,15 @@
     const subject = filters.subject || 'all';
     const mode = filters.mode || 'all';
     const exam = filters.exam || 'all';
+    const topic = filters.topic || 'all';
 
     return questions.filter(question => {
       if (subject !== 'all' && question.subject !== subject) return false;
       if (mode === 'past' && !question.past) return false;
-      if (mode === 'practice' && question.past) return false;
+      if (mode === 'study' && !question.study) return false;
+      if (mode === 'practice' && (question.past || question.study)) return false;
       if (exam !== 'all' && question.exam !== exam) return false;
+      if (topic !== 'all' && question.topicId !== topic) return false;
       return true;
     });
   }
@@ -58,7 +61,8 @@
       filters: {
         subject: filters.subject || 'all',
         mode: filters.mode || 'all',
-        exam: filters.exam || 'all'
+        exam: filters.exam || 'all',
+        topic: filters.topic || 'all'
       },
       finished: false,
       recorded: false

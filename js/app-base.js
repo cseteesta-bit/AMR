@@ -17,13 +17,13 @@
   A.quizSession = null;
   A.timerId = null;
   A.currentRoute = 'home';
-  A.preferences = {subject:'all',mode:'all',exam:'all',count:10};
+  A.preferences = {subject:'all',mode:'all',exam:'all',topic:'all',count:10};
 
   A.today = () => {
     const d = new Date(), offset = d.getTimezoneOffset() * 60000;
     return new Date(d - offset).toISOString().slice(0,10);
   };
-  A.defaults = () => ({start:A.today(),done:[],history:[],notes:[],theme:'dark'});
+  A.defaults = () => ({start:A.today(),done:[],history:[],notes:[],studyDone:[],theme:'dark'});
   A.validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '') && !Number.isNaN(new Date(`${value}T00:00:00`).getTime());
   A.bn = value => String(value).replace(/\d/g,digit => '০১২৩৪৫৬৭৮৯'[digit]);
   A.esc = value => String(value ?? '').replace(/[&<>"']/g,c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -41,6 +41,7 @@
       state.done=Array.isArray(state.done)?[...new Set(state.done.map(Number).filter(n=>n>=1&&n<=100))].sort((a,b)=>a-b):[];
       state.history=Array.isArray(state.history)?state.history.slice(0,300):[];
       state.notes=Array.isArray(state.notes)?state.notes.slice(0,100):[];
+      state.studyDone=Array.isArray(state.studyDone)?[...new Set(state.studyDone.map(String))]:[];
       state.theme=state.theme==='light'?'light':'dark';
       return state;
     } catch(error){console.warn(error);return A.defaults();}

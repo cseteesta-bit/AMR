@@ -11,13 +11,17 @@ for (let index = 1; index <= 7; index += 1) {
 for (let index = 1; index <= 5; index += 1) {
   require(`../js/past-${index}.js`);
 }
+for (let index = 1; index <= 5; index += 1) {
+  require(`../js/study-bundle-${index}.js`);
+}
 
 const quiz = require('../js/quiz-core.js');
 const data = window.BCS_DATA;
 
-assert.equal(data.questions.length, 210, 'question bank should contain 210 questions');
+assert.equal(data.questions.length, 330, 'question bank should contain 330 questions');
 assert.equal(data.questions.filter(question => question.past).length, 90, 'past question bank should contain 90 questions');
-assert.equal(new Set(data.questions.map(question => question.id)).size, 210, 'question IDs should be unique');
+assert.equal(data.questions.filter(question => question.study).length, 120, 'study question bank should contain 120 questions');
+assert.equal(new Set(data.questions.map(question => question.id)).size, 330, 'question IDs should be unique');
 assert.equal(data.subjects.reduce((sum, subject) => sum + subject.marks, 0), 200, 'syllabus marks should total 200');
 
 const examNames = new Set(data.questions.filter(question => question.past).map(question => question.exam));
@@ -27,6 +31,10 @@ const pastQuestions = quiz.filterQuestions(data.questions, { mode: 'past' });
 assert.equal(pastQuestions.length, 90);
 assert(pastQuestions.every(question => question.past));
 
+const studyQuestions = quiz.filterQuestions(data.questions, { mode: 'study' });
+assert.equal(studyQuestions.length, 120);
+assert(studyQuestions.every(question => question.study));
+
 const examQuestions = quiz.filterQuestions(data.questions, { mode: 'past', exam: '47th BCS' });
 assert.equal(examQuestions.length, 10);
 assert(examQuestions.every(question => question.exam === '47th BCS'));
@@ -35,7 +43,8 @@ const deterministicRandom = () => 0.25;
 const session = quiz.createSession(examQuestions, 5, deterministicRandom, {
   subject: 'all',
   mode: 'past',
-  exam: '47th BCS'
+  exam: '47th BCS',
+  topic: 'all'
 });
 
 assert.equal(session.questions.length, 5);
@@ -64,6 +73,7 @@ assert.equal(quiz.move(session, 1), false, 'cannot move after final question');
 console.log('BCS 100 Pro smoke tests passed:', {
   questions: data.questions.length,
   pastQuestions: pastQuestions.length,
+  studyQuestions: studyQuestions.length,
   exams: examNames.size,
   syllabusMarks: 200
 });

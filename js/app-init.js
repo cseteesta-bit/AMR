@@ -26,7 +26,7 @@
   });
 
   document.addEventListener('change',event=>{
-    if(event.target.matches('#quizMode,#quizSubject,#quizExam,#quizCount')){
+    if(event.target.matches('#quizMode,#quizSubject,#quizTopic,#quizExam,#quizCount')){
       A.syncPreferences?.();A.views.quiz?.();
     }
   });
